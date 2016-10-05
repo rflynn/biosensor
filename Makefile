@@ -11,7 +11,7 @@ snapshot:
 webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
-tmpfs:
+tmpramdrive:
 	grep /tmp /etc/fstb || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0" >> /etc/fstab'
 	grep /tmp <(mount) || sudo mount /tmp
 
