@@ -1,5 +1,7 @@
 # ex: set ts=8 noet:
 
+SHELL := /bin/bash
+
 install:
 	sudo apt-get install -y gphoto2 imagemagick
 	sudo apt-get install -y python-picamera python3-picamera
@@ -12,7 +14,7 @@ webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
 tmpramdrive:
-	grep /tmp /etc/fstb || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0" >> /etc/fstab'
+	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0" >> /etc/fstab';
 	grep /tmp <(mount) || sudo mount /tmp
 
 
