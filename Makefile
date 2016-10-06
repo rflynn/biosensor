@@ -2,6 +2,9 @@
 
 SHELL := /bin/bash
 
+default:
+	echo wut
+
 install:
 	sudo apt-get install -y gphoto2 imagemagick
 	sudo apt-get install -y python-picamera python3-picamera
