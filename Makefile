@@ -8,10 +8,16 @@ default:
 install:
 	sudo apt-get install -y gphoto2 imagemagick
 	sudo apt-get install -y python-picamera python3-picamera
-	lsusb
 
 snapshot:
-	fswebcam --no-banner -r 640x480 /tmp/image.jpg
+	#fswebcam --no-banner -r 640x480 /tmp/image.jpg
+	# default raspi NOIR camera resolution: 3280x2464
+	# raspistill -o /tmp/image.jpg (5 seconds, 4174086 bytes)
+	# raspistill -w 1024 -h 768 -o /tmp/image.jpg
+	time raspistill -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
+
+snapshot-bw:
+	time raspistill --colfx 128:128 -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
 
 webserve:
 	(cd /tmp && python3 -m http.server 8081)
