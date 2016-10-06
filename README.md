@@ -41,6 +41,7 @@ How does one detect bird calls in an audio file?
     1. https://github.com/dk1027/ConvolutionalNeuralNetOnFoosballSounds
 2. https://www.lunaverus.com/cnn
 3. https://www.kaggle.com/c/mlsp-2013-birds
+4. http://stackoverflow.com/questions/22471072/convolutional-neural-network-cnn-for-audio
 
 
 ## Sharing/Reporting
