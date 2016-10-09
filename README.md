@@ -24,6 +24,15 @@
 * http://spellfoundry.com/products/sleepy-pi-2/
 * https://shop.pimoroni.com/products/mopi-mobile-pi-power
 
+* http://sonof8bits.com/automated-raspberry-pi-audio-recorder/2014/09 -- record audio using sox, and pause/stop on silence.
+* http://baddotrobot.com/blog/2016/01/06/disable-led-for-edimax/
+* http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
+
+```sh
+echo disable_camera_led=1 >> /boot/config.txt
+```
+ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
+
 
 ## Detection/Classification
 
@@ -37,6 +46,7 @@ How do we identify stuff?
 4. [OpenCV Tutorial: Training your own detector | packtpub.com](https://www.youtube.com/watch?v=WEzm7L5zoZE)
 5. https://realpython.com/blog/python/face-detection-in-python-using-a-webcam/
 6. http://www.bitfusion.io/2016/08/31/training-a-bird-classifier-with-tensorflow-and-tflearn/
+7. https://github.com/samjabrahams/tensorflow-on-raspberry-pi
 
 ### Audio
 
