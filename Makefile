@@ -19,6 +19,13 @@ snapshot:
 snapshot-bw:
 	time raspistill --colfx 128:128 -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
 
+timelapse:
+	time raspistill --colfx 128:128 --verbose -t 100000 -tl 5000 -n -w 512 -h 384 -o /tmp/img_%04d.jpg
+
+stream:
+	which vlc || sudo apt-get install -y vlc
+	raspivid -o - -t 0 -n -w 600 -h 400 -fps 3 | cvlc -vvv stream:///dev/stdin --sout '#rtp{sdp=rtsp://:8554/}' :demux=h264
+
 webserve:
 	(cd /tmp && python3 -m http.server 8081)
 

@@ -22,6 +22,12 @@
 ...
 
 
+```sh
+echo disable_camera_led=1 >> /boot/config.txt
+```
+ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
+
+
 ## Detection/Classification
 
 ### Images/Video
