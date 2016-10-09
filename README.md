@@ -19,7 +19,10 @@
 
 ## Hardware
 
-...
+* http://www.wildlifeacoustics.com/products/song-meter-sm4/faqs
+* https://mannoiseandanimals.wordpress.com/2016/06/13/recording-stations/
+* http://spellfoundry.com/products/sleepy-pi-2/
+* https://shop.pimoroni.com/products/mopi-mobile-pi-power
 
 
 ## Detection/Classification
@@ -32,6 +35,8 @@ How do we identify stuff?
 2. http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
 3. http://www.pyimagesearch.com/2016/06/20/detecting-cats-in-images-with-opencv/
 4. [OpenCV Tutorial: Training your own detector | packtpub.com](https://www.youtube.com/watch?v=WEzm7L5zoZE)
+5. https://realpython.com/blog/python/face-detection-in-python-using-a-webcam/
+6. http://www.bitfusion.io/2016/08/31/training-a-bird-classifier-with-tensorflow-and-tflearn/
 
 ### Audio
 
