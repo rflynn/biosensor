@@ -25,6 +25,12 @@
 * http://baddotrobot.com/blog/2016/01/06/disable-led-for-edimax/
 * http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
 
+```sh
+echo disable_camera_led=1 >> /boot/config.txt
+```
+ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
+
+
 ## Detection/Classification
 
 ### Images/Video
