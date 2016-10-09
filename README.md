@@ -21,6 +21,9 @@
 
 ...
 
+* http://sonof8bits.com/automated-raspberry-pi-audio-recorder/2014/09 -- record audio using sox, and pause/stop on silence.
+* http://baddotrobot.com/blog/2016/01/06/disable-led-for-edimax/
+* http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
 
 ## Detection/Classification
 
@@ -32,6 +35,7 @@ How do we identify stuff?
 2. http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
 3. http://www.pyimagesearch.com/2016/06/20/detecting-cats-in-images-with-opencv/
 4. [OpenCV Tutorial: Training your own detector | packtpub.com](https://www.youtube.com/watch?v=WEzm7L5zoZE)
+5. https://github.com/samjabrahams/tensorflow-on-raspberry-pi
 
 ### Audio
 

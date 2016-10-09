@@ -19,6 +19,10 @@ snapshot:
 snapshot-bw:
 	time raspistill --colfx 128:128 -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
 
+venv:
+	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
+	./venv/bin/pip install -r requirements.txt
+
 webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
