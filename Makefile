@@ -20,7 +20,14 @@ snapshot-bw:
 	time raspistill --colfx 128:128 -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
 
 timelapse:
-	time raspistill --colfx 128:128 --verbose -t 100000 -tl 5000 -n -w 512 -h 384 -o /tmp/img_%04d.jpg
+	# time raspistill --colfx 128:128 --verbose -t 100000 -tl 5000 -n -w 512 -h 384 -o /tmp/img_%04d.jpg
+	# 1fps for 60 seconds
+	# raspivid --colfx 128:128 --verbose -w 512 -h 384 -fps 1 -t 10000 -o /tmp/vid.h264
+	# convert raw H264 to MP4
+	# sudo apt-get install -y libav-tools
+	# avconv -y -r 1 -i /tmp/vid.h264 -vcodec copy /tmp/vid.mp4
+	# record 1 minute @ 1fps to h264/mp4
+	raspivid --colfx 128:128 --verbose -w 512 -h 384 -fps 1 -t 60000 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%s).mp4
 
 stream:
 	which vlc || sudo apt-get install -y vlc
