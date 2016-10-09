@@ -19,7 +19,10 @@
 
 ## Hardware
 
-...
+* http://www.wildlifeacoustics.com/products/song-meter-sm4/faqs
+* https://mannoiseandanimals.wordpress.com/2016/06/13/recording-stations/
+* http://spellfoundry.com/products/sleepy-pi-2/
+* https://shop.pimoroni.com/products/mopi-mobile-pi-power
 
 * http://sonof8bits.com/automated-raspberry-pi-audio-recorder/2014/09 -- record audio using sox, and pause/stop on silence.
 * http://baddotrobot.com/blog/2016/01/06/disable-led-for-edimax/
@@ -44,6 +47,8 @@ How do we identify stuff?
 * http://www.pyimagesearch.com/2016/06/20/detecting-cats-in-images-with-opencv/
 * [OpenCV Tutorial: Training your own detector | packtpub.com](https://www.youtube.com/watch?v=WEzm7L5zoZE)
 * https://github.com/samjabrahams/tensorflow-on-raspberry-pi
+* https://realpython.com/blog/python/face-detection-in-python-using-a-webcam/
+* http://www.bitfusion.io/2016/08/31/training-a-bird-classifier-with-tensorflow-and-tflearn/
 
 
 ### Audio
