@@ -21,6 +21,9 @@
 
 * http://www.wildlifeacoustics.com/products/song-meter-sm4/faqs
 * https://mannoiseandanimals.wordpress.com/2016/06/13/recording-stations/
+* http://www.feedertweeter.net/about
+* https://www.raspberrypi.org/blog/feeder-tweeter/
+* http://www.mammalweb.org/
 * http://spellfoundry.com/products/sleepy-pi-2/
 * https://shop.pimoroni.com/products/mopi-mobile-pi-power
 
@@ -34,6 +37,16 @@ echo disable_camera_led=1 >> /boot/config.txt
 ```
 ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
 
+```sh
+# echo bcm2708_wdog | sudo tee -a /etc/modules
+sudo modprobe bcm2835_wdt
+sudo apt-get install -y watchdog
+sudo update-rc.d watchdog defaults
+sudo /etc/init.d/watchdog start
+vim /etc/watchdog.conf  # edit 'ping' lines...
+```
+ref: http://blog.ricardoarturocabral.com/2013/01/auto-reboot-hung-raspberry-pi-using-on.html
+
 
 ## Detection/Classification
 
@@ -41,6 +54,14 @@ ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
 
 How do we identify stuff?
 
+ref: https://www.quora.com/How-should-I-label-image-data-for-machine-learning
+> How should I label image data for machine learning?
+> Train a classifier on only some of the frames.
+> Then write a program that uses the classifier to display the location of the car in a movie.
+> Use that movie to find failure frames and fix the labels for some of those frames.
+> Then retrain the classifier. Repeat this a few times and your classifier will be pretty good (if you use a good algorithm).
+
+* http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html
 * http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
 * http://shallowsky.com/blog/linux/install/simplecv-on-rpi.html
 * https://github.com/Russell91/TensorBox

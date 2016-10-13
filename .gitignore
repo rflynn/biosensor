@@ -1,4 +1,6 @@
 .*.sw[op]
+*.mp4
+.DS_Store
 venv/
 opencv-3.1.0/
 3.1.0.zip
