@@ -17,6 +17,10 @@ tmpramdrive:
 	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0" >> /etc/fstab';
 	grep /tmp <(mount) || sudo mount /tmp
 
+tmpramdrive-modela:
+	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=32m    0 0" >> /etc/fstab';
+	grep /tmp <(mount) || sudo mount /tmp
+
 
 # ref: http://blog.miguelgrinberg.com/post/how-to-build-and-run-mjpg-streamer-on-the-raspberry-pi
 
