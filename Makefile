@@ -36,6 +36,12 @@ stream:
 webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
+vid-tag-archive: FORCE
+	tar -cJvf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag
+
+vid-test-archive: FORCE
+	tar -cJvf vid-test-$$(date +%Y-%m-%d).tar.xz vid-test
+
 venv:
 	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
 	./venv/bin/pip install -r requirements.txt
@@ -60,4 +66,7 @@ mjpg-streamer-code-182.zip:
 	sudo apt-get install -y libjpeg8-dev imagemagick libv4l-dev
 	sudo ln -s /usr/include/linux/videodev2.h /usr/include/linux/videodev.h
 
+FORCE:
+
 .PHONY: install tmpfs mjpg-streamer
+
