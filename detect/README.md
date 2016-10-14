@@ -15,10 +15,17 @@
 3. generate .vec files (how? bin/createsamples.pl)
 4. ~~merge .vec files~~  <-- NO ref: http://answers.opencv.org/question/55879/opencv-mergevec-haartraining-issues/
 5. opencv_traincascade
-6. 
+
+
+## Archives
+* https://s3.amazonaws.com/biosensor-vid/vid-tag-2016-10-13.tar.xz
+* https://s3.amazonaws.com/biosensor-vid/vid-test-2016-10-13.tar.xz
+
+
 
     # extract frames
     ffmpeg -i vid_1476049436-cat.mp4 -r 24 vid_1476049436-cat-frame-%03d.jpg
+
 
 [Audio Event Classification Using Deep Neural Networks](http://smartfp7.eu/sites/default/files/field/files/page/Audio_classification_IS13.v1.03.final_.pdf)
 
@@ -45,5 +52,4 @@
 > the time dependencies in the signals. Another direction to
 > improve the results would be to integrate the output from
 > several segments.
-
 
