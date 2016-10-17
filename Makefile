@@ -8,13 +8,21 @@ default:
 install:
 	sudo apt-get install -y gphoto2 imagemagick
 	sudo apt-get install -y python-picamera python3-picamera
+	sudo apt-get install -y libavcodec-extra libav-tools
 
 snapshot:
 	#fswebcam --no-banner -r 640x480 /tmp/image.jpg
 	# default raspi NOIR camera resolution: 3280x2464
 	# raspistill -o /tmp/image.jpg (5 seconds, 4174086 bytes)
-	# raspistill -w 1024 -h 768 -o /tmp/image.jpg
-	time raspistill -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
+	#time raspistill -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
+	#raspistill -w 1024 -h 768 -o /tmp/image.jpg
+	#raspistill -w 1024 -h 768 --roi 0.25,0.25,0.5,0.5 -o /tmp/image.jpg
+	#raspistill -t 1 -w 1024 -h 768 --roi 0.25,0.25,0.5,0.5 -o /tmp/image.jpg
+	#raspistill -t 1 -w 512 -h 384 --roi 0.25,0.25,0.5,0.5 -o /tmp/image_$$(date +%Y-%m-%d-%H-%M-%S).jpg
+	raspistill -t 1 -w 512 -h 384 -q 50 --roi 0.25,0.25,0.5,0.5 -o /tmp/image_$$(date +%Y-%m-%d-%H-%M-%S).jpg
+
+snapshot-hq:
+	raspistill -t 1 -w 1024 -h 768 -q 75 --roi 0.25,0.25,0.5,0.5 -o /tmp/image_$$(date +%Y-%m-%d-%H-%M-%S).jpg
 
 snapshot-bw:
 	time raspistill --colfx 128:128 -t 1 -n -w 512 -h 384 -o /tmp/image.jpg
@@ -27,7 +35,13 @@ timelapse:
 	# sudo apt-get install -y libav-tools
 	# avconv -y -r 1 -i /tmp/vid.h264 -vcodec copy /tmp/vid.mp4
 	# record 1 minute @ 1fps to h264/mp4
-	raspivid --colfx 128:128 --verbose -w 512 -h 384 -fps 1 -t 60000 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%s).mp4
+	#raspivid --colfx 128:128 --verbose -w 512 -h 384 -fps 1 -t 60000 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%s).mp4
+	#raspivid --verbose -w 512 -h 384 -fps 1 -t 10000 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%s).mp4
+	#raspivid --verbose -w 512 -h 384 -fps 1 -t 10000 -o /tmp/vid_$$(date +%s).h264
+	#raspivid -fps 1 -t 10000 -o /tmp/vid_$$(date +%s).h264
+	#raspivid --verbose -w 512 -h 384 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -an -c:v copy /tmp/vid_$$(date +%Y-%m-%d).mp4
+	#raspivid -n -v -ex auto -w 512 -h 384 -ss 100000 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -an -vcodec copy /tmp/vid_$$(date +%Y-%m-%d-%H-%M-%S).mp4
+	raspivid -n -v -w 512 -h 384 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%Y-%m-%d-%H-%M-%S).mp4
 
 stream:
 	which vlc || sudo apt-get install -y vlc
@@ -51,7 +65,7 @@ tmpramdrive:
 	grep /tmp <(mount) || sudo mount /tmp
 
 tmpramdrive-modela:
-	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=32m    0 0" >> /etc/fstab';
+	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=64m    0 0" >> /etc/fstab';
 	grep /tmp <(mount) || sudo mount /tmp
 
 
