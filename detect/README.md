@@ -1,7 +1,30 @@
 
-Archives
+# Training a Haar Classifier
+
+## Steps
+
+## References
+* http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html
+    * http://www.technolabsz.com/2011/08/how-to-do-opencv-haar-training.html
+    * http://note.sonots.com/SciSoftware/haartraining.html#w0a08ab4
+    * http://docs.opencv.org/2.4/doc/user_guide/ug_traincascade.html?highlight=cascade%2520classifier%2520training
+
+1. collect positive images (1500 cropped)
+  1. list positive image filepaths
+2. do the same for negative images
+3. generate .vec files (how? bin/createsamples.pl)
+4. ~~merge .vec files~~  <-- NO ref: http://answers.opencv.org/question/55879/opencv-mergevec-haartraining-issues/
+5. opencv_traincascade
+
+
+## Archives
 * https://s3.amazonaws.com/biosensor-vid/vid-tag-2016-10-13.tar.xz
 * https://s3.amazonaws.com/biosensor-vid/vid-test-2016-10-13.tar.xz
+
+
+
+    # extract frames
+    ffmpeg -i vid_1476049436-cat.mp4 -r 24 vid_1476049436-cat-frame-%03d.jpg
 
 
 [Audio Event Classification Using Deep Neural Networks](http://smartfp7.eu/sites/default/files/field/files/page/Audio_classification_IS13.v1.03.final_.pdf)
@@ -29,8 +52,4 @@ Archives
 > the time dependencies in the signals. Another direction to
 > improve the results would be to integrate the output from
 > several segments.
-
-
-    # extract frames
-    ffmpeg -i vid_1476049436-cat.mp4 -r 24 vid_1476049436-cat-frame-%03d.jpg
 
