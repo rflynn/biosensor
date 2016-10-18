@@ -37,10 +37,10 @@ webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
 vid-tag-archive: FORCE
-	tar -cJvf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag
+	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag
 
 vid-test-archive: FORCE
-	tar -cJvf vid-test-$$(date +%Y-%m-%d).tar.xz vid-test
+	tar -cJf vid-test-$$(date +%Y-%m-%d).tar.xz vid-test
 
 venv:
 	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
