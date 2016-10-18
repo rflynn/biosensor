@@ -12,7 +12,8 @@ destfile=$destdir/$datestamp.jpg
 
 snapshot()
 {
-	raspistill -t 1 -w 512 -h 384 -q 50 --roi 0.25,0.25,0.5,0.5 -o $destfile
+	# NOTE: -q 10 gives us quality=75. weird scale...
+	raspistill -t 1 -w 512 -h 384 -q 10 --roi 0.25,0.25,0.5,0.5 -o $destfile
 }
 
 mkdir -p $destdir
