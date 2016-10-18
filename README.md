@@ -26,6 +26,8 @@
 * http://www.mammalweb.org/
 * http://spellfoundry.com/products/sleepy-pi-2/
 * https://shop.pimoroni.com/products/mopi-mobile-pi-power
+* http://voegeln-live.de/ -- Raspberry Pi Bird House live 1/minute
+* http://viilaamo.com/birdhousepages/birdhousemakingof.html  -- wifi, solar-powered rpi + arduino
 
 * http://sonof8bits.com/automated-raspberry-pi-audio-recorder/2014/09 -- record audio using sox, and pause/stop on silence.
 * http://baddotrobot.com/blog/2016/01/06/disable-led-for-edimax/
@@ -41,11 +43,26 @@ ref: http://shallowsky.com/blog/hardware/raspberry-pi-noir.html
 # echo bcm2708_wdog | sudo tee -a /etc/modules
 sudo modprobe bcm2835_wdt
 sudo apt-get install -y watchdog
-sudo update-rc.d watchdog defaults
-sudo /etc/init.d/watchdog start
 vim /etc/watchdog.conf  # edit 'ping' lines...
+...edit /lib/systemd/system/watchdog.service and add line "WantedBy=multi-user.target" under [Install]
+...edit sudo vim /etc/default/watchdog and change line to watchdog_module="bcm2835_wdt"
+sudo systemctl enable watchdog.service
+sudo systemctl start watchdog.service
+echo "dtparam=watchdog=on" >> /boot/config.txt
+sudo reboot
 ```
 ref: http://blog.ricardoarturocabral.com/2013/01/auto-reboot-hung-raspberry-pi-using-on.html
+
+
+```sh
+rsync -avz pi@192.168.1.229:src/biosensor/photos/ photos/
+```
+
+measure cpu/gpu temp:
+```sh
+cat /sys/class/thermal/thermal_zone0/temp  # cpu
+vcgencmd measure_temp  # gpu
+```
 
 
 ## Detection/Classification
@@ -61,6 +78,7 @@ ref: https://www.quora.com/How-should-I-label-image-data-for-machine-learning
 > Use that movie to find failure frames and fix the labels for some of those frames.
 > Then retrain the classifier. Repeat this a few times and your classifier will be pretty good (if you use a good algorithm).
 
+* https://cvhci.anthropomatik.kit.edu/~baeuml/projects/a-universal-labeling-tool-for-computer-vision-sloth/
 * http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html
 * http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
 * http://shallowsky.com/blog/linux/install/simplecv-on-rpi.html
