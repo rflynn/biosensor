@@ -4,7 +4,7 @@ set -x
 
 while true; do
 	hour=$(date +%H)
-	if [ $hour -ge 6 ] && [ $hour -le 18 ]; then
+	if [ $hour -ge 6 ] && [ $hour -lt 18 ]; then
 		/bin/bash snapshot.sh
 		sleep 4
 	else
