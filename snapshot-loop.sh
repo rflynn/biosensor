@@ -3,6 +3,12 @@
 set -x
 
 while true; do
-	/bin/bash snapshot.sh
-	sleep 30
+	hour=$(date +%H)
+	if [ $hour -ge 7 ] && [ $hour -lt 18 ]; then
+		/bin/bash snapshot.sh
+		sleep 4
+	else
+		echo "too dark at $hour, waiting..."
+		sleep 60
+	fi
 done
