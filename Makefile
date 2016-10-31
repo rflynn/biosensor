@@ -51,10 +51,12 @@ webserve:
 	(cd /tmp && python3 -m http.server 8081)
 
 vid-tag-archive: FORCE
-	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag
+	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag vid-tag-cropped
 
-vid-test-archive: FORCE
-	tar -cJf vid-test-$$(date +%Y-%m-%d).tar.xz vid-test
+vid-tag-sync: FORCE
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync bestof/ s3://biosensor-vid/bestof/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
 
 venv:
 	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
