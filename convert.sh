@@ -10,7 +10,7 @@ IFS=$'\n'
 for f in $(find "$dir" -type f -name '*.jpg'); do
     #echo "$f"
     quality=$(identify -verbose "$f" | grep Quality | cut -c 12-)
-    if [ $quality -gt 85 ]; then
+    if [[ $quality -gt 85 ]]; then
         echo "$f"
         #echo "$quality -gt 85"
         tmp="${f/%.jpg/-q85.jpg}"
