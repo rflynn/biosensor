@@ -1,5 +1,6 @@
 # vim: set ts=4 et:
 from datetime import datetime
+import os
 import time
 
 import picamera
@@ -20,14 +21,19 @@ with picamera.PiCamera() as camera:
             dt = datetime.now()
             while dt.hour >= 7 and dt.hour < 18:
                 dt = datetime.now()
-                filedest = './photos/%04d/%02d/%02d/%04d-%02d-%02d-%02d-%02d-%02d.jpg' % (
-		            dt.year, dt.month, dt.day,
-		            dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
+                path = './photos/%04d/%02d/%02d' % (dt.year, dt.month, dt.day)
+                try:
+                    os.makedirs(path)
+                except:
+                    pass
+                filedest = '%s/%04d-%02d-%02d-%02d-%02d-%02d.jpg' % (
+		            path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second)
                 print(filedest)
-                camera.capture(filedest, format='jpeg', quality=15, thumbnail=None, bayer=False, use_video_port=False)
+                camera.capture(filedest, format='jpeg', quality=12, thumbnail=None, bayer=False, use_video_port=False)
                 time.sleep(1)
-            print('hour=%02d, waiting...' % (dt.hour))
+            print('%s hour=%02d, waiting...' % (dt, dt.hour))
+            time.sleep(60)
     except Exception as e:
         print(e)
     #camera.wait_recording(10)
-    camera.stop_recording()
+    #camera.stop_recording()
