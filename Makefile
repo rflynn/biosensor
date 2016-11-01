@@ -44,7 +44,7 @@ timelapse:
 	#raspivid -fps 1 -t 10000 -o /tmp/vid_$$(date +%s).h264
 	#raspivid --verbose -w 512 -h 384 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -an -c:v copy /tmp/vid_$$(date +%Y-%m-%d).mp4
 	#raspivid -n -v -ex auto -w 512 -h 384 -ss 100000 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -an -vcodec copy /tmp/vid_$$(date +%Y-%m-%d-%H-%M-%S).mp4
-	raspivid -n -v --codec H264 -w 512 -h 384 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%Y-%m-%d-%H-%M-%S).mp4
+	raspivid -n -v -w 512 -h 384 -fps 1 -t 10000 --roi 0.25,0.25,0.5,0.5 -o - | avconv -y -r 1 -i - -vcodec copy /tmp/vid_$$(date +%Y-%m-%d-%H-%M-%S).mp4
 
 stream:
 	which vlc || sudo apt-get install -y vlc
