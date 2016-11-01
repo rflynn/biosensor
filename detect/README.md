@@ -1,4 +1,16 @@
 
+
+## Archives
+* https://s3.amazonaws.com/biosensor-vid/vid-tag-2016-10-17.tar.xz
+
+## Image Labeling
+
+* https://github.com/tzutalin/labelImg -- best so far, supports rect + custom label + multi-file
+* https://github.com/cvhciKIT/sloth -- nice, but only allows rectangle and face annotations. hackable w/ Python... maybe
+* https://github.com/mpitid/pylabelme -- most promising, does arbitrary labels, but only does free-hand polygon (not rect) and is one-file-at-a-time
+* https://github.com/sanchom/pilab-annotator -- does multi-file, but is just broken
+
+
 # Training a Haar Classifier
 
 ## Steps
@@ -15,12 +27,6 @@
 3. generate .vec files (how? bin/createsamples.pl)
 4. ~~merge .vec files~~  <-- NO ref: http://answers.opencv.org/question/55879/opencv-mergevec-haartraining-issues/
 5. opencv_traincascade
-
-
-## Archives
-* https://s3.amazonaws.com/biosensor-vid/vid-tag-2016-10-13.tar.xz
-* https://s3.amazonaws.com/biosensor-vid/vid-test-2016-10-13.tar.xz
-
 
 
     # extract frames
