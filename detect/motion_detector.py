@@ -4,6 +4,7 @@
 import argparse
 import datetime
 import imutils
+import numpy as np
 import time
 import cv2
 
@@ -19,7 +20,8 @@ ffmpeg -r 1 -f image2 -s 512x384 -i 'x%4d.jpg' -vcodec libx264 -crf 25 -pix_fmt 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
+ap.add_argument("-a", "--min-area", type=int, default=50, help="minimum area size")
+ap.add_argument("-x", "--max-area", type=int, default=5000, help="maximum area size")
 args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
@@ -30,8 +32,41 @@ if args.get('video') is None:
 else:
     camera = cv2.VideoCapture(args["video"])
 
-# initialize the first frame in the video stream
-firstFrame = None
+
+#########
+
+# calculate the average background
+# skip first 3 seconds
+for _ in range(24 * 3):
+    (grabbed, frame) = camera.read()
+
+avg1 = np.float32(frame)
+while True:
+    grabbed, frame = camera.read()
+    if not grabbed:
+        break
+    #frame = imutils.resize(frame, width=500)
+    cv2.accumulateWeighted(frame, avg1, 0.01)
+    res1 = cv2.convertScaleAbs(avg1)
+
+'''
+OpenCV Error: Assertion failed (dst.size == src.size && dst.channels() == cn) in accumulateWeighted, file /tmp/opencv-20160604-38092-6muj0l/opencv-2.4.13/modules/imgproc/src/accum.cpp, line 430
+Traceback (most recent call last):
+  File "motion_detector.py", line 49, in <module>
+    cv2.accumulateWeighted(frame, avg1, 0.01)
+cv2.error: /tmp/opencv-20160604-38092-6muj0l/opencv-2.4.13/modules/imgproc/src/accum.cpp:430: error: (-215) dst.size == src.size && dst.channels() == cn in function accumulateWeighted
+'''
+
+#########
+
+# re-open
+camera = cv2.VideoCapture(args["video"])
+# skip first 3 seconds
+for _ in range(24 * 3):
+    (grabbed, frame) = camera.read()
+
+firstFrame = res1
+
 # loop over the frames of the video
 while True:
     # grab the current frame and initialize the occupied/unoccupied
@@ -45,7 +80,7 @@ while True:
         break
 
     # resize the frame, convert it to grayscale, and blur it
-    frame = imutils.resize(frame, width=500)
+    #frame = imutils.resize(frame, width=500)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -58,6 +93,14 @@ while True:
     frameDelta = cv2.absdiff(firstFrame, gray)
     thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
 
+    '''
+OpenCV Error: Sizes of input arguments do not match (The operation is neither 'array op array' (where arrays have the same size and the same number of channels), nor 'array op scalar', nor 'scalar op array') in arithm_op, file /tmp/opencv-20160604-38092-6muj0l/opencv-2.4.13/modules/core/src/arithm.cpp, line 1287
+Traceback (most recent call last):
+  File "motion_detector.py", line 93, in <module>
+    frameDelta = cv2.absdiff(firstFrame, gray)
+cv2.error: /tmp/opencv-20160604-38092-6muj0l/opencv-2.4.13/modules/core/src/arithm.cpp:1287: error: (-209) The operation is neither 'array op array' (where arrays have the same size and the same number of channels), nor 'array op scalar', nor 'scalar op array' in function arithm_op
+    '''
+
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
@@ -68,6 +111,8 @@ while True:
     for c in cnts:
         # if the contour is too small, ignore it
         if cv2.contourArea(c) < args["min_area"]:
+            continue
+        if cv2.contourArea(c) > args["max_area"]:
             continue
 
         # compute the bounding box for the contour, draw it on the frame,

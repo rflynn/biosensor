@@ -21,9 +21,14 @@
     * http://note.sonots.com/SciSoftware/haartraining.html#w0a08ab4
     * http://docs.opencv.org/2.4/doc/user_guide/ug_traincascade.html?highlight=cascade%2520classifier%2520training
 
+```
+../venv/bin/python gen_vid_tag_cropped.py
+```
+
 1. collect positive images (1500 cropped)
   1. list positive image filepaths
 2. do the same for negative images
+3. opencv_createsamples?
 3. generate .vec files (how? bin/createsamples.pl)
 4. ~~merge .vec files~~  <-- NO ref: http://answers.opencv.org/question/55879/opencv-mergevec-haartraining-issues/
 5. opencv_traincascade

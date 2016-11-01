@@ -1,14 +1,7 @@
 
-## Run
+## Goal
 
-    make tmpramdrive
-    make snapshot
-    make webserve
-
-
-## Install
-
-
+The automated real-time recognition of multiple bird species from video recording in the forms of a logical event stream, low- and high-quality images and video clips.
 
 ## Design
 
@@ -16,6 +9,11 @@
 2. Object detection/classification
 3. Sharing/reporting
 
+## Run
+
+    make tmpramdrive
+    make snapshot
+    make webserve
 
 ## Hardware
 
@@ -64,6 +62,9 @@ cat /sys/class/thermal/thermal_zone0/temp  # cpu
 vcgencmd measure_temp  # gpu
 ```
 
+sunrise/sunset
+http://www.risacher.org/sunwait/
+
 
 ## Detection/Classification
 
@@ -78,7 +79,37 @@ ref: https://www.quora.com/How-should-I-label-image-data-for-machine-learning
 > Use that movie to find failure frames and fix the labels for some of those frames.
 > Then retrain the classifier. Repeat this a few times and your classifier will be pretty good (if you use a good algorithm).
 
-* https://cvhci.anthropomatik.kit.edu/~baeuml/projects/a-universal-labeling-tool-for-computer-vision-sloth/
+find files with a given OS X color tag
+```sh
+mdfind 'kMDItemUserTags == Red'
+```
+
+```sh
+# concatenate JPEGs into a video
+ffmpeg -pattern_type glob -i '2016-10-20-09-*.jpg' -r 30 -c:v libx264 9am.mp4
+
+# https://trac.ffmpeg.org/wiki/Debug/MacroblocksAndMotionVectors
+ffmpeg -flags2 +export_mvs -i 9am.mp4 -vf codecview=mv=pf+bf+bb 9am-motionvectors.mp4
+
+# 
+ffmpeg -i 9am.mp4 -vf "select=gt(scene\,0.01),setpts=N/(25*TB)" 9am-scenefilter-01.mp4
+# helps filter out static shots, but isn't smart enough to deal with light-level changes. motion vectors would be preferred
+
+# chain them both together...
+ffmpeg -i 9am.mp4 -vf "select=gt(scene\,0.01),setpts=N/(25*TB)" -f h264 pipe:1 | ffmpeg -y -flags2 +export_mvs -i - -vf codecview=mv=pf+bf+bb 9am-scene-01-motionvectors.mp4
+
+# what i want
+ffmpeg -i 9am.mp4 -flags2 +export_mvs -vf "select=gt(mv\,1),setpts=N/(25*TB)" 9am-scene-01-motionvectors.mp4
+```
+
+* http://bits.citrusbyte.com/motion-detection-with-raspberry-pi/ -- hooking into H264 motion vectors with picamera
+    * https://github.com/citrusbyte/pimotion
+    * http://picamera.readthedocs.io/en/release-1.11/recipes2.html#recording-motion-vector-data
+        * https://en.wikipedia.org/wiki/Motion_estimation
+    * http://picamera.readthedocs.io/en/release-1.11/recipes2.html#splitting-to-from-a-circular-stream
+* https://sites.google.com/site/wsgyou/research/livevideo
+* http://image-net.org/
+* https://github.com/tzutalin/labelImg -- python/QT4 image annotator/labeller w/ multi-file workflow and ImageNet-style customizable multi-label output
 * http://coding-robin.de/2013/07/22/train-your-own-opencv-haar-classifier.html
 * http://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/
 * http://shallowsky.com/blog/linux/install/simplecv-on-rpi.html
