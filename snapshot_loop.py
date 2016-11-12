@@ -11,7 +11,7 @@ with picamera.PiCamera() as camera:
     camera.resolution = (600, 450)
     #camera.framerate = 1
     camera.zoom = (0.375, 0.375, 0.25, 0.25)
-    camera.sharpness = +10
+    camera.sharpness = +5
     camera.awb_mode = 'auto'  # sunlight
     #camera.start_preview()
     #camera.start_recording('foo.h264')
@@ -19,7 +19,7 @@ with picamera.PiCamera() as camera:
     try:
         while True:
             dt = datetime.now()
-            while dt.hour >= 7 and dt.hour < 18:
+            while dt.hour >= 7 and dt.hour < 17:
                 dt = datetime.now()
                 path = './photos/%04d/%02d/%02d' % (dt.year, dt.month, dt.day)
                 try:
