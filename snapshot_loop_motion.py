@@ -39,15 +39,19 @@ def ensure_dir(path):
     except:
         pass
 
-def image_write_to_disk(image):
+def image_calc_filename():
     dt = datetime.now()
     path = './photos/%04d/%02d/%02d' % (dt.year, dt.month, dt.day)
     ensure_dir(path)
-    filedest = '%s/%04d-%02d-%02d-%02d-%02d-%02d-%03d.jpg' % (
+    filename = '%s/%04d-%02d-%02d-%02d-%02d-%02d-%03d.jpg' % (
         path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, int(dt.microsecond / 1000))
-    with open(filedest, 'wb') as f:
+    return filename
+
+def image_write_to_disk(image):
+    filename = image_calc_filename()
+    with open(filename, 'wb') as f:
         f.write(image)
-    return filedest
+    return filename
 
 def image_should_save(image):
     dt = datetime.now()
@@ -59,11 +63,23 @@ def image_capture(camera):
     stream.seek(0)
     return stream.read()
 
+def image_capture_burst(camera):
+    stream = io.BytesIO()
+    i = 0
+    # NOTE: burst= may or may not be helpful...
+    for _ in camera.capture_continuous(stream, format='jpeg', quality=12, burst=True, thumbnail=None, bayer=False, use_video_port=False):
+        stream.truncate()
+        stream.seek(0)
+        filename = image_write_to_disk(stream.read())
+        LOG.info('image_capture_burst filename: %s %s' % (i, filename))
+        if i >= 4:
+            break
+        i += 1
+    return filename
+
 def on_motion_detection(camera):
     # when motion is detected, take a series of snapshots
-    for n in range(3):
-        image = image_capture(camera)
-        filename = image_write_to_disk(image)
+    filename = image_capture_burst(camera)
     LOG.info('image captured to file: %s' % filename)
 
 
@@ -76,7 +92,7 @@ last_still_capture_time = datetime.now()
 # It gets an array (see: "a") of motion vectors from the GPU.
 class DetectMotion(picamera.array.PiMotionAnalysis):
     def analyse(self, a):
-        global minimum_still_interval, motion_detected, last_still_capture_time
+        global motion_detected
         # print('analyse...')
         #if datetime.datetime.now() > last_still_capture_time + \
         #    datetime.timedelta(seconds=minimum_still_interval):
@@ -88,9 +104,10 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
         # if there're more than 10 vectors with a magnitude greater
         # than 60, then motion was detected:
         mo = (a > 10).sum()
-        if mo >= 10:
+        if mo > 0:
             LOG.info('motion: %s' % mo)
-            motion_detected = True
+            if mo >= 9:
+                motion_detected = True
 
 camera = picamera.PiCamera()
 with DetectMotion(camera) as output:
