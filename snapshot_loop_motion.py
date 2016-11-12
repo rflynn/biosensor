@@ -45,10 +45,9 @@ def image_write_to_disk(image):
     ensure_dir(path)
     filedest = '%s/%04d-%02d-%02d-%02d-%02d-%02d-%03d.jpg' % (
         path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, int(dt.microsecond / 1000))
-    print(filedest)
     with open(filedest, 'wb') as f:
         f.write(image)
-    return path
+    return filedest
 
 def image_should_save(image):
     dt = datetime.now()
@@ -65,7 +64,7 @@ def on_motion_detection(camera):
     for n in range(3):
         image = image_capture(camera)
         filename = image_write_to_disk(image)
-        LOG.info('image captured to file: %s' % filename)
+    LOG.info('image captured to file: %s' % filename)
 
 
 minimum_still_interval = 5
@@ -89,10 +88,8 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
         # if there're more than 10 vectors with a magnitude greater
         # than 60, then motion was detected:
         mo = (a > 10).sum()
-        print('mo: %s' % mo),
-        if mo > 1:
-            LOG.info('motion detected at: %s' % (
-                datetime.now().strftime('%Y-%m-%dT%H.%M.%S.%f')))
+        if mo >= 10:
+            LOG.info('motion: %s' % mo)
             motion_detected = True
 
 camera = picamera.PiCamera()
@@ -106,8 +103,8 @@ with DetectMotion(camera) as output:
                                    format='h264',
                                    motion_output=output)
 
+            LOG.info('waiting for motion...')
             while not motion_detected:
-                LOG.info('waiting for motion...')
                 camera.wait_recording(1)
 
             LOG.info('stop recording and capture an image...')

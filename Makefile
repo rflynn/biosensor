@@ -11,7 +11,7 @@ install:
 	sudo apt-get install -y python-picamera python3-picamera
 	sudo apt-get install -y libavcodec-extra libav-tools
 	sudo apt-get install -y python-virtualenv python-pip python-dev python3-dev
-	virtualenv venv && venv/bin/pip install -r requirements.txt
+	virtualenv --system-site-packages venv && venv/bin/pip install -r requirements.txt
 
 
 snapshot:
