@@ -1,4 +1,4 @@
-# ex: set ts=8 noet:
+# vim: set ts=8 noet:
 
 SHELL := /bin/bash
 
@@ -6,10 +6,11 @@ default:
 	echo wut
 
 install:
+	sudo apt-get install -y libjpeg-dev libtiff-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev
 	sudo apt-get install -y gphoto2 imagemagick
 	sudo apt-get install -y python-picamera python3-picamera
 	sudo apt-get install -y libavcodec-extra libav-tools
-	sudo apt-get install -y python-virtualenv python-pip
+	sudo apt-get install -y python-virtualenv python-pip python-dev python3-dev
 	virtualenv venv && venv/bin/pip install -r requirements.txt
 
 
