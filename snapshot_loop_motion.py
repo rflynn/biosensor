@@ -5,6 +5,7 @@ from datetime import datetime
 import io
 import logging
 import numpy as np
+import os
 import picamera
 import picamera.array
 import signal
@@ -36,21 +37,29 @@ def camera_init(camera):
 def ensure_dir(path):
     try:
         os.makedirs(path)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 def image_calc_filename():
     dt = datetime.now()
     path = './photos/%04d/%02d/%02d' % (dt.year, dt.month, dt.day)
-    ensure_dir(path)
     filename = '%s/%04d-%02d-%02d-%02d-%02d-%02d-%03d.jpg' % (
         path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, int(dt.microsecond / 1000))
-    return filename
+    return path, filename
 
 def image_write_to_disk(image):
-    filename = image_calc_filename()
-    with open(filename, 'wb') as f:
-        f.write(image)
+    path, filename = image_calc_filename()
+    try:
+        with open(filename, 'wb') as f:
+            f.write(image)
+    except Exception as e:
+        print(e)
+        ensure_dir(path)
+        try:
+            with open(filename, 'wb') as f:
+                f.write(image)
+        except Exception as e2:
+            print(e2)
     return filename
 
 def image_should_save(image):
@@ -63,18 +72,25 @@ def image_capture(camera):
     stream.seek(0)
     return stream.read()
 
-def image_capture_burst(camera):
+def _image_capture_burst(camera):
     stream = io.BytesIO()
     i = 0
     # NOTE: burst= may or may not be helpful...
-    for _ in camera.capture_continuous(stream, format='jpeg', quality=12, burst=True, thumbnail=None, bayer=False, use_video_port=False):
+    for _ in camera.capture_continuous(stream, format='jpeg', quality=12, burst=False, thumbnail=None, bayer=False, use_video_port=False):
         stream.truncate()
         stream.seek(0)
         filename = image_write_to_disk(stream.read())
         LOG.info('image_capture_burst filename: %s %s' % (i, filename))
-        if i >= 4:
+        if i >= 1:
             break
         i += 1
+    return filename
+
+def image_capture_burst(camera):
+    for i in range(2):
+        image = image_capture(camera)
+        filename = image_write_to_disk(image)
+        LOG.info('image_capture_burst filename: %s %s' % (i, filename))
     return filename
 
 def on_motion_detection(camera):
@@ -104,9 +120,9 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
         # if there're more than 10 vectors with a magnitude greater
         # than 60, then motion was detected:
         mo = (a > 10).sum()
-        if mo > 0:
+        if mo > 1:
             LOG.info('motion: %s' % mo)
-            if mo >= 9:
+            if mo >= 4:
                 motion_detected = True
 
 camera = picamera.PiCamera()
