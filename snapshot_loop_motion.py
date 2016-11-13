@@ -9,6 +9,7 @@ import os
 import picamera
 import picamera.array
 import signal
+from time import sleep
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
@@ -25,14 +26,11 @@ signal.signal(signal.SIGTERM, signal_term_handler)
 
 def camera_init(camera):
     camera.resolution = (640, 480)
-    camera.framerate = 5
-    '''
-    camera.resolution = (600, 450)
-    #camera.framerate = 1
-    '''
+    camera.framerate = 4
     camera.zoom = (0.375, 0.375, 0.25, 0.25)
     camera.sharpness = +5
     camera.awb_mode = 'auto'  # sunlight
+    LOG.info('camera.shutter_speed=%s...' % camera.shutter_speed)
 
 def ensure_dir(path):
     try:
@@ -49,6 +47,7 @@ def image_calc_filename():
 
 def image_write_to_disk(image):
     path, filename = image_calc_filename()
+    LOG.info('writing...')
     try:
         with open(filename, 'wb') as f:
             f.write(image)
@@ -60,6 +59,7 @@ def image_write_to_disk(image):
                 f.write(image)
         except Exception as e2:
             print(e2)
+    LOG.info('written')
     return filename
 
 def image_should_save(image):
@@ -68,7 +68,9 @@ def image_should_save(image):
 
 def image_capture(camera):
     stream = io.BytesIO()
+    LOG.info('capture...')
     camera.capture(stream, format='jpeg', quality=12, thumbnail=None, bayer=False, use_video_port=False)
+    LOG.info('captured')
     stream.seek(0)
     return stream.read()
 
@@ -96,7 +98,7 @@ def image_capture_burst(camera):
 def on_motion_detection(camera):
     # when motion is detected, take a series of snapshots
     filename = image_capture_burst(camera)
-    LOG.info('image captured to file: %s' % filename)
+    # LOG.info('image captured to file: %s' % filename)
 
 
 minimum_still_interval = 5
@@ -121,8 +123,10 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
         # than 60, then motion was detected:
         mo = (a > 10).sum()
         if mo > 1:
-            LOG.info('motion: %s' % mo)
-            if mo >= 4:
+            is_mo = 7 <= mo < 500
+            LOG.info('motion: %s%s' % (mo, '*' if is_mo else ''))
+            if is_mo:
+                # higher threshold is to avoid detecting motion every time we start...
                 motion_detected = True
 
 camera = picamera.PiCamera()
@@ -138,7 +142,8 @@ with DetectMotion(camera) as output:
 
             LOG.info('waiting for motion...')
             while not motion_detected:
-                camera.wait_recording(1)
+                camera.wait_recording(0)  # no wait
+                sleep(0.0625)
 
             LOG.info('stop recording and capture an image...')
             camera.stop_recording()
