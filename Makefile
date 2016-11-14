@@ -59,15 +59,18 @@ vid-tag-archive: FORCE
 vid-tag-sync: FORCE
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync bestof/ s3://biosensor-vid/bestof/
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --size-only vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
 
 vid-tag-sync-pull: FORCE
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/bestof/ bestof/
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/vid-tag-negative/ vid-tag-negative/
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/vid-tag-cropped/ vid-tag-cropped/
 
+vid-tag-cropped-count: FORCE
+	(cd vid-tag-cropped/ && find . -name '*.jpg' | grep -Eo '/[^/]+/' | sed -e's/\///g' | sort | uniq -c | sort -k1 -rn)
+
 venv:
-	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
+	test -d venv || virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
 	./venv/bin/pip install -r requirements.txt
 
 tmpramdrive:
