@@ -107,11 +107,12 @@ def each_annotation():
         for subdir in subdirs:
             path = d + '/' + subdir
             if not subdir.startswith('_'):
-                for _d2, _subdirs2, files in os.walk(path):
+                for d2, subdirs2, files in os.walk(path):
+                    # print(d2, subdirs2, files)
                     for f in files:
                         if f.endswith('.xml'):
-                            yield path + '/' + f
-    
+                            yield d2 + '/' + f
+
 
 def process_annotations():
     for filepath in each_annotation():
