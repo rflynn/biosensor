@@ -58,8 +58,8 @@ vid-tag-archive: FORCE
 	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag vid-tag-cropped
 
 vid-tag-sync: FORCE
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync bestof/ s3://biosensor-vid/bestof/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete bestof/ s3://biosensor-vid/bestof/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --size-only --delete vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
 
 vid-tag-sync-pull: FORCE
