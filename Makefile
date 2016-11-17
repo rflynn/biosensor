@@ -68,7 +68,10 @@ vid-tag-sync-pull: FORCE
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/vid-tag-cropped/ vid-tag-cropped/
 
 vid-tag-cropped-count: FORCE
-	(cd vid-tag-cropped/ && find . -name '*.jpg' | grep -Eo '/[^/]+/' | sed -e's/\///g' | sort | uniq -c | sort -k1 -rn)
+	find vid-tag-cropped -name '*.jpg' | grep -Eo '/[^/]+/' | sed -e's/\///g' | sort | uniq -c | sort -k1 -rn
+
+vid-tag-count-jpg-xml: FORCE
+	find vid-tag -name '*.jpg' -o -name '*.xml' | sed -e's/^vid-tag\///' -e's/\/20.*[.]/ /' | sort | uniq -c | sort -k1 -rn
 
 venv:
 	test -d venv || virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
