@@ -12,25 +12,15 @@ import signal
 from time import sleep
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-LOG = logging.getLogger('capture_motion')
-
-def signal_term_handler(signal, frame):
-    LOG.info('shutting down ...')
-    # this raises SystemExit(0) which fires all "try...finally" blocks:
-    sys.exit(0)
-
-# this is useful when this program is started at boot via init.d
-# or an upstart script, so it can be killed: i.e. kill some_pid:
-signal.signal(signal.SIGTERM, signal_term_handler)
-
 def camera_init(camera):
     camera.resolution = (640, 480)
-    camera.framerate = 4
+    camera.framerate = 5
     camera.zoom = (0.375, 0.375, 0.25, 0.25)
     camera.sharpness = +5
     camera.awb_mode = 'auto'  # sunlight
     LOG.info('camera.shutter_speed=%s...' % camera.shutter_speed)
+    camera.ISO = 800
+    LOG.info('camera.ISO=%s...' % camera.ISO)
 
 def ensure_dir(path):
     try:
@@ -95,9 +85,28 @@ def image_capture_burst(camera):
         LOG.info('image_capture_burst filename: %s %s' % (i, filename))
     return filename
 
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+    def handle_timeout(self, signum, frame):
+        raise Exception(self.error_message)
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)
+
+
 def on_motion_detection(camera):
     # when motion is detected, take a series of snapshots
-    filename = image_capture_burst(camera)
+    try:
+        # prevent camera from hanging...
+        with timeout(seconds=10):
+            filename = image_capture_burst(camera)
+    except Exception as e:
+        print(e)
     # LOG.info('image captured to file: %s' % filename)
 
 
@@ -129,13 +138,28 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
                 # higher threshold is to avoid detecting motion every time we start...
                 motion_detected = True
 
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+LOG = logging.getLogger('capture_motion')
+
+def signal_term_handler(signal, frame):
+    LOG.info('shutting down ...')
+    # this raises SystemExit(0) which fires all "try...finally" blocks:
+    sys.exit(0)
+
+# this is useful when this program is started at boot via init.d
+# or an upstart script, so it can be killed: i.e. kill some_pid:
+signal.signal(signal.SIGTERM, signal_term_handler)
+
 camera = picamera.PiCamera()
 with DetectMotion(camera) as output:
     try:
+        LOG.info('camera_init...')
         camera_init(camera)
         # record video to nowhere, as we are just trying to capture images:
 
         while True:
+            # FIXME: the camera can get fucked up and this may block forever, check timeout...
             camera.start_recording('/dev/null',
                                    format='h264',
                                    motion_output=output)
