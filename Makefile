@@ -57,18 +57,28 @@ webserve:
 vid-tag-archive: FORCE
 	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag vid-tag-cropped
 
+passport-sync: FORCE
+	rsync -av vid-tag-cropped/ /Volumes/PASSPORT/src/biosensor/vid-tag-cropped/
+	rsync -av vid-tag/ /Volumes/PASSPORT/src/biosensor/vid-tag/
+
 vid-tag-sync: FORCE
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync bestof/ s3://biosensor-vid/bestof/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete bestof/ s3://biosensor-vid/bestof/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --size-only --delete vid-tag-cropped/ s3://biosensor-vid/vid-tag-cropped/
 
 vid-tag-sync-pull: FORCE
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/bestof/ bestof/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/vid-tag-negative/ vid-tag-negative/
-	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync s3://biosensor-vid/vid-tag-cropped/ vid-tag-cropped/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete s3://biosensor-vid/bestof/ bestof/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete s3://biosensor-vid/vid-tag-negative/ vid-tag-negative/
+	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete s3://biosensor-vid/vid-tag-cropped/ vid-tag-cropped/
+
+vid-tag-cropped-count: FORCE
+	find vid-tag-cropped -name '*.jpg' | grep -Eo '/[^/]+/' | sed -e's/\///g' | sort | uniq -c | sort -k1 -rn
+
+vid-tag-count-jpg-xml: FORCE
+	find vid-tag -name '*.jpg' -o -name '*.xml' | sed -e's/^vid-tag\///' -e's/\/20.*[.]/ /' | sort | uniq -c | sort -k1 -rn
 
 venv:
-	virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
+	test -d venv || virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
 	./venv/bin/pip install -r requirements.txt
 
 tmpramdrive:
