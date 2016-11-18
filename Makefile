@@ -57,6 +57,10 @@ webserve:
 vid-tag-archive: FORCE
 	tar -cJf vid-tag-$$(date +%Y-%m-%d).tar.xz vid-tag vid-tag-cropped
 
+passport-sync: FORCE
+	rsync -av vid-tag-cropped/ /Volumes/PASSPORT/src/biosensor/vid-tag-cropped/
+	rsync -av vid-tag/ /Volumes/PASSPORT/src/biosensor/vid-tag/
+
 vid-tag-sync: FORCE
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete bestof/ s3://biosensor-vid/bestof/
 	AWS_ACCESS_KEY_ID=AKIAJ7SHC5IHG3HLRWNA AWS_SECRET_ACCESS_KEY=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 aws s3 sync --delete vid-tag/_negative/ s3://biosensor-vid/vid-tag-negative/
