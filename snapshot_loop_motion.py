@@ -1,6 +1,21 @@
 #!/usr/bin/python
 # vim: set ts=4 et:
 
+'''
+2016-11-15 14:32:43,556 stop recording and capture an image...
+Traceback (most recent call last):
+  File "_ctypes/callbacks.c", line 314, in 'calling callback function'
+  File "/home/pi/src/biosensor/venv/local/lib/python2.7/site-packages/picamera/mmalobj.py", line 796, in wrapper
+    self._pool.send_buffer()
+  File "/home/pi/src/biosensor/venv/local/lib/python2.7/site-packages/picamera/mmalobj.py", line 1232, in send_buffer
+    self._port.send_buffer(self.get_buffer())
+  File "/home/pi/src/biosensor/venv/local/lib/python2.7/site-packages/picamera/mmalobj.py", line 624, in send_buffer
+    prefix="unable to send the buffer to port %s" % self.name)
+  File "/home/pi/src/biosensor/venv/local/lib/python2.7/site-packages/picamera/exc.py", line 157, in mmal_check
+    raise PiCameraMMALError(status, prefix)
+picamera.exc.PiCameraMMALError: unable to send the buffer to port vc.ril.video_encode:out:0(H264): Argument is invalid
+'''
+
 from datetime import datetime
 import io
 import logging
