@@ -81,7 +81,7 @@ def _image_capture_burst(camera):
     return filename
 
 def image_capture_burst(camera):
-    for i in range(2):
+    for i in range(1):
         image = image_capture(camera)
         filename = image_write_to_disk(image)
         LOG.info('image_capture_burst filename: %s %s' % (i, filename))
