@@ -19,7 +19,9 @@ def camera_init(camera):
     camera.sharpness = +5
     camera.awb_mode = 'auto'  # sunlight
     LOG.info('camera.shutter_speed=%s...' % camera.shutter_speed)
-    camera.ISO = 800
+    LOG.info('camera.exposure_speed=%s...' % camera.exposure_speed)
+    LOG.info('camera.brightness=%s...' % camera.brightness)
+    camera.ISO = 0
     LOG.info('camera.ISO=%s...' % camera.ISO)
 
 def ensure_dir(path):
