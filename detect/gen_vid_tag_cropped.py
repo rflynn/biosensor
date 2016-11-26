@@ -117,8 +117,11 @@ def each_annotation():
 def process_annotations():
     for filepath in each_annotation():
         # print(filepath)
-        process_annotation_file(filepath)
-
+        try:
+            process_annotation_file(filepath)
+        except Exception as e:
+            print(filepath)
+            raise e
 
 def test_process_annotation():
     cropped_path = '../vid-tag-cropped'
