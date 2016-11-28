@@ -118,12 +118,8 @@ class timeout:
 
 def on_motion_detection(camera):
     # when motion is detected, take a series of snapshots
-    try:
-        # prevent camera from hanging...
-        with timeout(seconds=10):
-            filename = image_capture_burst(camera)
-    except Exception as e:
-        print(e)
+    filename = image_capture_burst(camera)
+
     # LOG.info('image captured to file: %s' % filename)
 
 
@@ -187,10 +183,15 @@ with DetectMotion(camera) as output:
                 sleep(0.0625)
 
             LOG.info('stop recording and capture an image...')
-            camera.stop_recording()
-            motion_detected = False
 
-            on_motion_detection(camera)
+            try:
+                # prevent camera from hanging...
+                with timeout(seconds=10):
+                    camera.stop_recording()
+                    motion_detected = False
+                    on_motion_detection(camera)
+            except Exception as e:
+                LOG.info(str(e))
 
     except KeyboardInterrupt as e:
         LOG.info("\nreceived KeyboardInterrupt via Ctrl-C")
