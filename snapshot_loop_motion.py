@@ -29,7 +29,7 @@ from time import sleep
 
 def camera_init(camera):
     camera.resolution = (640, 480)
-    camera.framerate = 5
+    camera.framerate = 10
     camera.zoom = (0.375, 0.375, 0.25, 0.25)
     camera.sharpness = +5
     camera.awb_mode = 'auto'  # sunlight
