@@ -47,7 +47,7 @@ def ensure_dir(path):
 
 def image_calc_filename():
     dt = datetime.now()
-    path = './photos/%04d/%02d/%02d' % (dt.year, dt.month, dt.day)
+    path = './photos/%04d-%02d/%04d-%02d-%02d' % (dt.year, dt.month, dt.year, dt.month, dt.day)
     filename = '%s/%04d-%02d-%02d-%02d-%02d-%02d-%03d.jpg' % (
         path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, int(dt.microsecond / 1000))
     return path, filename
