@@ -16,7 +16,7 @@ Traceback (most recent call last):
 picamera.exc.PiCameraMMALError: unable to send the buffer to port vc.ril.video_encode:out:0(H264): Argument is invalid
 '''
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import io
 import logging
 import numpy as np
@@ -103,19 +103,6 @@ def image_capture_burst(camera):
     return filename
 
 
-class timeout:
-    def __init__(self, seconds=1, error_message='Timeout'):
-        self.seconds = seconds
-        self.error_message = error_message
-    def handle_timeout(self, signum, frame):
-        raise Exception(self.error_message)
-    def __enter__(self):
-        signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.seconds)
-    def __exit__(self, type, value, traceback):
-        signal.alarm(0)
-
-
 def on_motion_detection(camera):
     # when motion is detected, take a series of snapshots
     filename = image_capture_burst(camera)
@@ -155,15 +142,37 @@ class DetectMotion(picamera.array.PiMotionAnalysis):
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 LOG = logging.getLogger('capture_motion')
 
+
+def update_watchdog():
+    '''
+    record my pid and latest timestamp in a place the watchdog can check it
+    '''
+    LOG.info('update_watchdog...')
+    now = datetime.now()
+    my_pid = os.getpid()
+    tmpfile = '/tmp/biosensor_loop_motion_watchdog.{}'.format(my_pid)
+    with open(tmpfile, 'w') as f:
+        f.write(now.strftime('%s'))
+    return now
+
+
+def kill_watchdog():
+    my_pid = os.getpid()
+    tmpfile = '/tmp/biosensor_loop_motion_watchdog.{}'.format(my_pid)
+    os.remove(tmpfile)
+
+
 def signal_term_handler(signal, frame):
     LOG.info('shutting down ...')
     # this raises SystemExit(0) which fires all "try...finally" blocks:
     sys.exit(0)
 
+
 # this is useful when this program is started at boot via init.d
 # or an upstart script, so it can be killed: i.e. kill some_pid:
 signal.signal(signal.SIGTERM, signal_term_handler)
 
+last_watchdog = update_watchdog()
 camera = picamera.PiCamera()
 with DetectMotion(camera) as output:
     try:
@@ -172,26 +181,31 @@ with DetectMotion(camera) as output:
         # record video to nowhere, as we are just trying to capture images:
 
         while True:
-            # FIXME: the camera can get fucked up and this may block forever, check timeout...
             camera.start_recording('/dev/null',
                                    format='h264',
                                    motion_output=output)
 
             LOG.info('waiting for motion...')
+            last_watchdog = update_watchdog()
             while not motion_detected:
                 camera.wait_recording(0)  # no wait
                 sleep(0.0625)
+                if datetime.now() - last_watchdog > timedelta(0, 30):
+                    LOG.info('30 seconds without motion...')
+                    last_watchdog = update_watchdog()
 
             LOG.info('stop recording and capture an image...')
 
             try:
-                # prevent camera from hanging...
-                with timeout(seconds=10):
-                    camera.stop_recording()
-                    motion_detected = False
-                    on_motion_detection(camera)
+                # XXX: NOTE: this can block forever, which is why we need the watchdog...
+                camera.stop_recording()
+                motion_detected = False
+                on_motion_detection(camera)
             except Exception as e:
                 LOG.info(str(e))
+
+            if datetime.now() - last_watchdog > timedelta(0, 30):
+                last_watchdog = update_watchdog()
 
     except KeyboardInterrupt as e:
         LOG.info("\nreceived KeyboardInterrupt via Ctrl-C")
@@ -200,3 +214,4 @@ with DetectMotion(camera) as output:
         camera.close()
         LOG.info("\ncamera turned off!")
         LOG.info("detect motion has ended.\n")
+        kill_watchdog()
