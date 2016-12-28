@@ -1,6 +1,6 @@
 #!/bin/bash
-test -d venv || virtualenv --system-site-packages -p python2.7 venv
-source venv/bin/activate
+test -d venv2.7 || virtualenv --system-site-packages -p python2.7 venv2.7
+source venv2.7/bin/activate
 pip install --upgrade pip
 pip install scipy
 pip install Pillow
