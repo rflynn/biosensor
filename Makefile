@@ -13,6 +13,10 @@ install:
 	sudo apt-get install -y python-virtualenv python-pip python-dev python3-dev
 	virtualenv --system-site-packages venv && venv/bin/pip install -r requirements.txt
 
+install-service:
+	sudo cp service/biosensor /etc/init.d/biosensor
+	sudo update-rc.d biosensor defaults
+
 
 snapshot:
 	#fswebcam --no-banner -r 640x480 /tmp/image.jpg
