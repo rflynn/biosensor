@@ -104,8 +104,10 @@ def process_annotation_file(filepath):
 
 def each_annotation():
     for d, subdirs, _files in os.walk('../vid-tag'):
-        for subdir in subdirs:
+        # process most-recently modified subdirs first...
+        for subdir in sorted(subdirs, key=lambda p: os.path.getmtime(d + '/' + p), reverse=True):
             path = d + '/' + subdir
+            print('scanning {}'.format(path))
             if not subdir.startswith('_'):
                 for d2, subdirs2, files in os.walk(path):
                     # print(d2, subdirs2, files)
