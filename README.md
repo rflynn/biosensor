@@ -53,7 +53,11 @@ ref: http://blog.ricardoarturocabral.com/2013/01/auto-reboot-hung-raspberry-pi-u
 
 
 ```sh
-rsync -avz pi@192.168.1.229:src/biosensor/photos/ photos/
+rsync -av pi@192.168.1.229:src/biosensor/photos/ photos/
+```
+
+```sh
+(cd detect/ && python gen_vid_tag_cropped.py)
 ```
 
 measure cpu/gpu temp:
