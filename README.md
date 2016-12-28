@@ -14,9 +14,15 @@ The automated real-time recognition of multiple bird species from video recordin
 
 ## Run
 
-    make tmpramdrive
-    make snapshot
-    make webserve
+### Install and run Raspberry Pi biosensor motion capture service
+
+    ssh pi@192.168.1.229
+    mkdir -p ~/src && cd src/
+    git clone git@github.com:rflynn/biosensor.git && cd biosensor/
+    make install
+    sudo make /etc/init.d/biosensor
+    sudo reboot
+
 
 ## Hardware
 

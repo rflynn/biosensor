@@ -2,21 +2,25 @@
 
 SHELL := /bin/bash
 
-default:
-	echo wut
+test:
+	exit 1
 
-install:
+install: /usr/bin/virtualenv venv
+
+venv: /usr/bin/virtualenv
+	virtualenv -p python2.7 --system-site-packages venv # inherit cv2 from global...
+	./venv/bin/pip install -r requirements.txt
+
+/usr/bin/virtualenv:
 	sudo apt-get install -y libjpeg-dev libtiff-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev
 	sudo apt-get install -y gphoto2 imagemagick
-	sudo apt-get install -y python-picamera python3-picamera
 	sudo apt-get install -y libavcodec-extra libav-tools
+	sudo apt-get install -y python-picamera python3-picamera
 	sudo apt-get install -y python-virtualenv python-pip python-dev python3-dev
-	virtualenv --system-site-packages venv && venv/bin/pip install -r requirements.txt
 
-install-service:
+/etc/init.d/biosensor: venv service/biosensor
 	sudo cp service/biosensor /etc/init.d/biosensor
 	sudo update-rc.d biosensor defaults
-
 
 snapshot:
 	raspistill -t 1 -w 512 -h 384 -q 50 --roi 0.25,0.25,0.5,0.5 -o /tmp/image_$$(date +%Y-%m-%d-%H-%M-%S).jpg
@@ -57,10 +61,6 @@ vid-tag-cropped-count: FORCE
 vid-tag-count-jpg-xml: FORCE
 	find vid-tag -name '*.jpg' -o -name '*.xml' | sed -e's/^vid-tag\///' -e's/\/20.*[.]/ /' | sort | uniq -c | sort -k1 -rn
 
-venv:
-	test -d venv || virtualenv --system-site-packages -p python2.7 venv # inherit cv2 from global...
-	./venv/bin/pip install -r requirements.txt
-
 tmpramdrive:
 	grep /tmp /etc/fstab || sudo sh -c 'echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=100m    0 0" >> /etc/fstab';
 	grep /tmp <(mount) || sudo mount /tmp
@@ -87,5 +87,5 @@ mjpg-streamer-code-182.zip:
 
 FORCE:
 
-.PHONY: install tmpfs mjpg-streamer
+.PHONY: tmpfs mjpg-streamer
 
