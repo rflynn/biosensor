@@ -1,0 +1,98 @@
+digraph {
+
+    rankdir=LR
+    labelloc=top
+    /*label=biosensor*/
+
+    edge [color="#333333"]
+
+    bird [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="bird.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    camera [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="camera.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    /*
+    rpi [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="rpi.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+    */
+
+    /*
+    thinkpad [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="thinkpad.jpg" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+    */
+
+    human [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="human.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    bird_label [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="bird_label.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    /*
+    tensorflow [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="tensorflow.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+    */
+
+    neural_network [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="neural_network.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    bird_model [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="64" height="64" fixedsize="true"><IMG SRC="bird-model.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    bird_linechart [margin=0 shape=box, style=filled, fillcolor=white, color=white, label=<<TABLE border="0" cellborder="0">
+        <TR>
+            <TD width="96" height="96" fixedsize="true"><IMG SRC="bird_linechart.png" scale="true"/></TD>
+        </TR>
+    </TABLE>>];
+
+    /*
+    bird -> camera -> rpi -> human -> bird_label -> tensorflow -> bird_model -> rpi
+    rpi -> bird_linechart
+    */
+
+    /*
+    bird_linechart -> bird_model
+    bird_linechart -> camera
+    camera -> bird
+    bird_model -> neural_network
+    bird_model -> bird_label
+    bird_label -> camera
+    bird_label -> human
+    */
+
+    bird -> camera
+    bird_label -> bird_model
+    camera -> bird_label
+    human -> bird_label
+    neural_network -> bird_model
+    camera -> bird_linechart 
+    bird_model -> bird_linechart 
+
+}

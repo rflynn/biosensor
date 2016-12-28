@@ -3,6 +3,9 @@
 
 The automated real-time recognition of multiple bird species from video recording in the forms of a logical event stream, low- and high-quality images and video clips.
 
+![process](doc/biosensor_process.png "biosensor automates bio census")
+
+
 ## Design
 
 1. Hardware. Output: photo/video/audio stream
