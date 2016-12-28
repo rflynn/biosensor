@@ -1,7 +1,7 @@
 
 ## Goal
 
-The automated real-time recognition of multiple bird species from video recording in the forms of a logical event stream, low- and high-quality images and video clips.
+The automated real-time detection and classification of multiple bird species in the form of a logical event stream.
 
 ![process](doc/biosensor_process.png "biosensor automates bio census")
 
