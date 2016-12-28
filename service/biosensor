@@ -1,0 +1,50 @@
+#! /bin/sh
+# /etc/init.d/biosensor: Capture photos
+#
+
+### BEGIN INIT INFO
+# Provides:          biosensor
+# Required-Start:    $local_fs
+# Required-Stop:
+# Should-Start:      
+# X-Start-Before:    
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Capture photos
+# Description:  Capture photos
+### END INIT INFO
+
+PATH=/sbin:/bin
+
+. /lib/lsb/init-functions
+
+# Check for existance of the default file and exit if not there,
+# Closes #52839 for the boot-floppy people
+if [ -f /etc/default/rcS ] ; then
+  . /etc/default/rcS
+fi
+
+set -e
+set -x
+
+case "$1" in
+    start|restart|force-reload|reload)
+        log_action_begin_msg "Capturing biosensor photos"
+        STATUS=0
+        /bin/bash /home/pi/src/biosensor/biosensor_capture.sh &
+        /bin/bash /home/pi/src/biosensor/biosensor_watchdog.sh &
+        log_action_end_msg $STATUS
+        ;;
+    stop)
+        /bin/bash /home/pi/src/biosensor/service/stop.sh
+        ps waxu | grep biosensor_watchdog | grep -v grep | awk '{print $2}' | xargs kill
+        ;;
+    status)
+        ;;
+    *)
+        echo "Usage: /etc/init.d/biosensor {start|stop|restart|reload|force-reload|status}" >&2
+        exit 3
+        ;;
+esac
+
+exit 0
