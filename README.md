@@ -1,7 +1,7 @@
 
 ## Goal
 
-The automated real-time detection and classification of multiple bird species in the form of a logical event stream.
+Automated real-time detection and classification of multiple bird species in the form of a logical event stream.
 
 ![process](doc/biosensor_process.png "biosensor automates bio census")
 
@@ -14,7 +14,7 @@ The automated real-time detection and classification of multiple bird species in
 
 ## Run
 
-#### Purchase Camera Components
+### Purchase Camera Components
 
 Cost: ~$100
 
@@ -31,6 +31,7 @@ Cost: 1-2 hours
 1. Download [Raspbian OS](https://www.raspberrypi.org/downloads/raspbian/) and [install to sdcard](https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 2. Plug in network, power cable, sdcard and boot up rpi
 3. Associate rpi w/ local access point, reboot and make sure it connects
+    ```
     ...in /etc/network/interfaces
     allow-hotplug wlan0
     iface wlan0 inet manual
@@ -43,6 +44,7 @@ Cost: 1-2 hours
         ssid="yournetworkssidgoeshere"
         psk="passwordgoeshere"
     }
+    ```
 4. Get latest software `sudo apt-get update` and `sudo apt-get upgrade` and reboot
 5. Enable camera `sudo raspi-config` select option 5 and reboot
 6. Test that camera works. TODO: explicit instructions
