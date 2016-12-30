@@ -14,19 +14,17 @@ The automated real-time detection and classification of multiple bird species in
 
 ## Run
 
-### Assemble Raspberry Pi mo-cap camera
+#### Purchase Camera Components
 
-#### Buy Hardware Components
-
-Cost: ~$110
+Cost: ~$100
 
 1. [rpi 3](https://www.amazon.com/dp/B01CD5VC92/) or [rpi 2](https://www.amazon.com/dp/B00T2U7R7I/) + [usb wifi](https://www.amazon.com/dp/B003MTTJOY/) and [power cable](https://www.amazon.com/dp/B00MARDJZ4/) ~$50
-2. [64GB sdcard](https://www.amazon.com/dp/B010Q588D4/) ~$20
+2. [32GB sdcard](https://www.amazon.com/dp/B010Q57T02/) ~$10
 2. [rpi camera module](https://www.amazon.com/gp/product/B01ER2SKFS/) ~$25
 3. [project box](https://www.amazon.com/gp/product/B00E0GJPJ2/) $6
 4. [mini tripod](https://www.amazon.com/gp/product/B00M78G2VO/), [security camera mount](https://www.amazon.com/gp/product/B000IDCDZY/) or [other stand](https://www.amazon.com/dp/B004H1R7M2/) ~$10
 
-### Get Network-Accessible Camera Running
+### Get Camera Running
 
 Cost: 1-2 hours
 
@@ -50,14 +48,14 @@ Cost: 1-2 hours
 6. Test that camera works. TODO: explicit instructions
 
 
-### Assemble Mountable Camera Hardware
+### Assemble Camera Case and Mount
 
 Cost: an afternoon
 
 1. Put Raspberry Pi in project box and figure out where all the holes go :)
-    a. camera
-    b. power cable
-    c. mount
+  1. camera
+  2. power cable
+  3. mount
 2. Drill holes in project box
 3. Mount camera using padding and tape
 4. Run the power cable and test that Raspberry Pi boots up and camera works
@@ -67,7 +65,7 @@ Cost: an afternoon
 8. Test it again. Repeat as necessary until mounted and tested successfully.
 
 
-### Install and run Raspberry Pi biosensor motion capture service
+### Install biosensor Service
 
 Cost: 5 minutes
 
@@ -79,7 +77,7 @@ Cost: 5 minutes
     sudo reboot
 
 
-### Fetch photos and label them
+### Photo Review and Labelling
 
 Cost: untold hours drawing boxes around birds
 
